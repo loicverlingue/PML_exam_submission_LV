@@ -18,7 +18,7 @@ dir<-"C:/Users/L_VERLINGUE/Desktop/CoursM2_R/MachineLearning/JohnHopkins"
 library(caret)
 ```
 
-```{r }
+```{r}
 testing<-read.csv(paste(dir,"/pml-testing.csv",sep=""), row.names = "problem_id")
 trainSet<-read.csv(paste(dir,"/pml-testing.csv",sep=""),na.strings= c('#DIV/0!','','NA'), stringsAsFactors = T)
 trainSet$X<-NULL
@@ -47,11 +47,16 @@ because outtput is a class
 test with 'rpart' for the first run
 ```{r}
 Fit1<-train(classe~.,data=training,method="rpart")
-Fit1$finalModel
 Pred<-predict(Fit1,crossval)
-confusionMatrix(crossval$classe,Pred)$overall
 ```
 
+```{r Fit1}
+Fit1$finalModel
+```
+
+```{r}
+confusionMatrix(crossval$classe,Pred)$overall
+```
 cross validation accuracy (0.4) is very low! May be due to high variance.
 
 note: as long as there many correlated value in the training set (many measures taken in closely to one another), a preprocessing could be performed using PCA however, the accuracy for prediction dont improve, therefore I have choose to discard this preprocessing method
