@@ -9,19 +9,19 @@ dim(trainSet)
 trainSet<-trainSet[,as.numeric(colSums(is.na(trainSet))/nrow(trainSet))<0.95 ]
 dim(trainSet)
 
-# create cross validation dataset from training set
+# create cross validation dataset from the training set
 # this will be needed to evaluate the best method to use on the trainning set
 inCV<-createDataPartition(trainSet$classe,p = 0.7,list = F)
 training<-trainSet[inCV,]
 crossval<-trainSet[-inCV,]
 
-# A test for predicting with trees
+# Predicting with trees for the first run
 Fit1<-train(classe~.,data=training,method="rpart")
 Pred<-predict(Fit2,crossval)
 confusionMatrix(crossval$classe,Pred)$overall
 
-# cross validation accuracy and kappa are very low!
-# note: as long as there seems to be many correlated value in the training set, a preprocessing could be performed using PCA
+# cross validation accuracy (0.4) is very low!
+# note: as long as there many correlated value in the training set (many measures taken in closely to one another), a preprocessing could be performed using PCA
 # however, the accuracy for prediction dont improve, therefore I have choose to discard this preprocessing method
 
 # Another method may be performed:
@@ -33,6 +33,9 @@ Fit2$finalModel #high accuracy = 0.9976455
 
 Pred<-predict(Fit2,crossval)
 confusionMatrix(crossval$classe,Pred)$overall  #Even higher accuracy : 0.9986, 95% CI : (0.9973, 0.9994)
+
+# on the cross validation set comprising 5885 examples, only 8 were wrongly classified. 
+# I think that all 20 validation test prediction will be good
 
 #just for fun trying with random forest, that add improvement over bagged trees by using a small tweak that decorrelates the trees.
 # however with my laptop, the running time was too long to perform random forest on the training data
