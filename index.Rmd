@@ -48,13 +48,17 @@ test with 'rpart' for the first run
 ```{r}
 Fit1<-train(classe~.,data=training,method="rpart")
 Pred<-predict(Fit1,crossval)
-```
-
-```{r Fit1}
 Fit1$finalModel
 ```
 
-```{r}
+```{r Fit1 echo=F}
+Fit1$finalModel
+```
+
+```{r }
+confusionMatrix(crossval$classe,Pred)$overall
+
+{echo=F}
 confusionMatrix(crossval$classe,Pred)$overall
 ```
 cross validation accuracy (0.4) is very low! May be due to high variance.
