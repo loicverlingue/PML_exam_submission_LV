@@ -20,7 +20,7 @@ Fit1<-train(classe~.,data=training,method="rpart")
 Pred<-predict(Fit2,crossval)
 confusionMatrix(crossval$classe,Pred)$overall
 
-# cross validation accuracy (0.4) is very low!
+# cross validation accuracy (0.4) is very low! May be due to high variance.
 # note: as long as there many correlated value in the training set (many measures taken in closely to one another), a preprocessing could be performed using PCA
 # however, the accuracy for prediction dont improve, therefore I have choose to discard this preprocessing method
 
