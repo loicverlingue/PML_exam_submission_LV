@@ -1,0 +1,71 @@
+---
+title: "PML project"
+author: "Loic Verlingue"
+date: "13 septembre 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## PML submission
+
+# downloading the data
+
+```{r echo=F}
+dir<-"C:/Users/L_VERLINGUE/Desktop/CoursM2_R/MachineLearning/JohnHopkins"
+library(caret)
+```
+
+```{r }
+testing<-read.csv(paste(dir,"/pml-testing.csv",sep=""), row.names = "problem_id")
+trainSet<-read.csv(paste(dir,"/pml-testing.csv",sep=""),na.strings= c('#DIV/0!','','NA'), stringsAsFactors = T)
+trainSet$X<-NULL
+
+```
+
+# cleaning the data
+
+remove the columns with more than 95% NAs
+
+```{r}
+trainSet<-trainSet[,as.numeric(colSums(is.na(trainSet))/nrow(trainSet))<0.95 ]
+```
+
+# Partitioning
+create cross validation dataset from the training set this will be needed to evaluate the best method to use on the trainning set
+```{r}
+inCV<-createDataPartition(trainSet$classe,p = 0.7,list = F)
+training<-trainSet[inCV,]
+crossval<-trainSet[-inCV,]
+```
+
+# Predicting with trees 
+because outtput is a class
+
+test with 'rpart' for the first run
+```{r}
+Fit1<-train(classe~.,data=training,method="rpart")
+Fit1$finalModel
+Pred<-predict(Fit1,crossval)
+confusionMatrix(crossval$classe,Pred)$overall
+```
+
+cross validation accuracy (0.4) is very low! May be due to high variance.
+
+note: as long as there many correlated value in the training set (many measures taken in closely to one another), a preprocessing could be performed using PCA however, the accuracy for prediction dont improve, therefore I have choose to discard this preprocessing method
+
+# Another method may be performed:
+bagging is taking repeated samples from the single training set in order to generate B different bootstrapped training data sets, and average all the predictions.
+This moderates high variance and could allow better cross validation set prediction
+
+```{r}
+Fit2<-train(classe~.,data=training,method="treebag")
+Fit2$finalModel #high accuracy = 0.9976455
+
+Pred<-predict(Fit2,crossval)
+confusionMatrix(crossval$classe,Pred)$overall  
+```
+Even higher accuracy : 0.9986, 95% CI : (0.9973, 0.9994) on the cross validation set comprising 5885 examples, only 8 were wrongly classified. 
+I think that all 20 validation test prediction will be good
