@@ -8,3 +8,9 @@ trainSet$X<-NULL
 dim(trainSet)
 trainSet<-trainSet[,as.numeric(colSums(is.na(trainSet))/nrow(trainSet))<0.95 ]
 dim(trainSet)
+
+# create cross validation dataset from training set
+inCV<-createDataPartition(trainSet$classe,p = 0.7,list = F)
+training<-trainSet[inCV,]
+crossval<-trainSet[-inCV,]
+
