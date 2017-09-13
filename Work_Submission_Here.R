@@ -36,6 +36,3 @@ confusionMatrix(crossval$classe,Pred)$overall  #Even higher accuracy : 0.9986, 9
 
 # on the cross validation set comprising 5885 examples, only 8 were wrongly classified. 
 # I think that all 20 validation test prediction will be good
-
-#just for fun trying with random forest, that add improvement over bagged trees by using a small tweak that decorrelates the trees.
-# however with my laptop, the running time was too long to perform random forest on the training data
