@@ -35,4 +35,4 @@ Pred<-predict(Fit2,crossval)
 confusionMatrix(crossval$classe,Pred)$overall  #Even higher accuracy : 0.9986, 95% CI : (0.9973, 0.9994)
 
 #just for fun trying with random forest, that add improvement over bagged trees by using a small tweak that decorrelates the trees.
-Fit3<-train(classe~.,data=training,method="rf", prox=T)
+# however with my laptop, the running time was too long to perform random forest on the training data
